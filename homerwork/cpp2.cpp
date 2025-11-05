@@ -2,9 +2,14 @@
 #include <algorithm>
 #include <cstdlib>
 #include <ctime>
+#include <string>
 using namespace std;
 
 #define SIZE 10
+
+// ==========================================================
+// TASK 1
+// ==========================================================
 
 // ==========================================================
 // INT VERSION
@@ -139,6 +144,60 @@ void ProcessMatrix(char matrix[SIZE][SIZE])
 }
 
 // ==========================================================
+// TASK 2
+// ==========================================================
+
+int FindGCD(int a, int b)
+{
+    if (b == 0) return a;
+    return FindGCD(b, a % b);
+}
+
+// ==========================================================
+// TASK 3
+// ==========================================================
+
+int BullsAndCows(string secret = "", int attempt = 1)
+{
+    if (secret == "")
+    {
+        int num = rand() % 9000 + 1000;
+        secret = to_string(num);
+        cout << "(Secret number generated!) Try to guess the 4-digit number.\n";
+    }
+
+    string guess;
+    cout << "Attempt " << attempt << " → Enter your guess: ";
+    cin >> guess;
+
+    if (guess.length() != 4 || !isdigit(guess[0]))
+    {
+        cout << "❌ Invalid input! Enter exactly 4 digits.\n";
+        return BullsAndCows(secret, attempt);
+    }
+
+    int bulls = 0, cows = 0;
+    for (int i = 0; i < 4; i++)
+    {
+        if (guess[i] == secret[i])
+            bulls++;
+        else if (secret.find(guess[i]) != string::npos)
+            cows++;
+    }
+
+    if (bulls == 4)
+    {
+        cout << "You guessed it! The number was " << secret << ".\n";
+        cout << "You needed " << attempt << " attempts!\n";
+        return attempt;
+    }
+
+    cout << "Bulls: " << bulls << ", Cows: " << cows << "\n\n";
+    return BullsAndCows(secret, attempt + 1);
+}
+
+
+// ==========================================================
 // MAIN
 // ==========================================================
 int main()
@@ -153,5 +212,10 @@ int main()
     ProcessMatrix(doubleMatrix);
     ProcessMatrix(charMatrix);
 
-    return 0;
+	int a, b;
+	cout << "Enter two integers to find their GCD >>> ";
+	cin >> a >> b;
+	cout << "GCD(" << a << ", " << b << ") = " << FindGCD(a, b) << endl << endl;
+    BullsAndCows();
+	return 0;
 }
